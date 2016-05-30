@@ -1,0 +1,64 @@
+        private void button2_Click(object sender, EventArgs e) // добавить
+        {
+            using (SqlConnection connection =
+            new SqlConnection(connectionString))
+            {
+                SqlCommand commandTableGet = new SqlCommand(queryTableGet, connection);
+
+                try
+                {
+                    connection.Open();
+
+                    SqlCommand commandTableSet = new SqlCommand(queryTableSet, connection);
+
+                    commandTableSet.Parameters.Add("@rang", SqlDbType.Int).Value = textBox1.Text;
+                    commandTableSet.Parameters.Add("@salary", SqlDbType.Int).Value = textBox2.Text;
+                    commandTableSet.Parameters.Add("@firstName", SqlDbType.NChar).Value = textBox3.Text;
+                    commandTableSet.Parameters.Add("@secondName", SqlDbType.NChar).Value = textBox4.Text;
+                    commandTableSet.Parameters.Add("@brith", SqlDbType.Date).Value = textBox5.Text;
+
+                    SqlDataReader insert = commandTableSet.ExecuteReader();
+
+                    insert.Read();
+                    insert.Close();
+
+                    connection.Close();
+
+                    button1.PerformClick();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка подключения!\n" + ex.Message);
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e) // обновить
+        {
+            using (SqlConnection connection =
+            new SqlConnection(connectionString))
+            {
+
+                SqlCommand commandTableGet = new SqlCommand(queryTableGet, connection);
+
+                try
+                {
+                    connection.Open();
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(queryTableGet, connection);
+                    SqlCommandBuilder builder = new SqlCommandBuilder(adapter);
+
+                    DataSet dataCache = new DataSet();
+
+                    adapter.Fill(dataCache, "Community");
+
+                    dataGridView1.DataSource = dataCache.Tables[0];
+
+                    connection.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка подключения!\n" + ex.Message);
+                }
+            }
+        }
