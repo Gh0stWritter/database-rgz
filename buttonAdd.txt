@@ -1,0 +1,38 @@
+        string connectionString =
+        "Data Source=GW\\SQLEXPRESS; Initial Catalog=pub;"
+        + "Integrated Security=true";
+
+	string queryTableSet = "INSERT INTO Community ([rang], [salary], [First name], [Second name], [Data of brith]) VALUES (@rang, @salary, @firstName, @secondName, @brith)"; 
+
+	private void button2_Click(object sender, EventArgs e) // добавить
+        {
+            using (SqlConnection connection =
+            new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    SqlCommand commandTableSet = new SqlCommand(queryTableSet, connection);
+
+                    commandTableSet.Parameters.Add("@rang", SqlDbType.Int).Value = textBox1.Text;
+                    commandTableSet.Parameters.Add("@salary", SqlDbType.Int).Value = textBox2.Text;
+                    commandTableSet.Parameters.Add("@firstName", SqlDbType.NChar).Value = textBox3.Text;
+                    commandTableSet.Parameters.Add("@secondName", SqlDbType.NChar).Value = textBox4.Text;
+                    commandTableSet.Parameters.Add("@brith", SqlDbType.Date).Value = textBox5.Text;
+
+                    SqlDataReader insert = commandTableSet.ExecuteReader();
+
+                    insert.Read();
+                    insert.Close();
+
+                    connection.Close();
+
+                    button1.PerformClick();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка подключения!\n" + ex.Message);
+                }
+            }
+        }
